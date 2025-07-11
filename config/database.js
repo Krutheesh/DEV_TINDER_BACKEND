@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
-
+const dotenv = require("dotenv");
+dotenv.config();
+// console.log("mmmmmm : ",process.env.VITE_MONGODB_URI)
 const connectDB = async () => {
   await mongoose.connect(
-    "mongodb+srv://krutheesh7:okiqr95XQTqFIiJp@cluster0.w7lu4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    process.env.VITE_MONGODB_URI
+    
   );
 };
 

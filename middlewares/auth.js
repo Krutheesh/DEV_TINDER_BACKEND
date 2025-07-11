@@ -16,7 +16,7 @@ const userAuth = async (req, res, next) => {
     if (!user) {
       throw new Error("User not found");
     }
-
+    user.password = undefined;
     req.user = user;
     next();
   } catch (err) {
