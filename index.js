@@ -6,11 +6,15 @@ const cors = require("cors");
 const http = require("http");
 const server = http.createServer(app);
 const initializeSocket = require("./utils/socket");
+const dotenv = require("dotenv");
+dotenv.config();
 
 initializeSocket(server);
+
+FRONTEND_URL = process.env.FRONTEND_URL;
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: FRONTEND_URL,
     credentials: true,
   })
 );
@@ -23,17 +27,22 @@ const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const chatRouter = require("./routes/chat");
 
-app.use("/", authRouter);
-app.use("/", profileRouter);
-app.use("/", requestRouter);
-app.use("/", userRouter);
-app.use("/", chatRouter);
-
+app.use("/api/", authRouter);
+app.use("/api/", profileRouter);
+app.use("/api/", requestRouter);
+app.use("/api/", userRouter);
+app.use("/api/", chatRouter);
+app.get("/", (req, res) => {
+  res.send("Welcome to DevTinder backend!");
+});
 connectDB()
   .then(() => {
     console.log("Database connection established...");
-    server.listen(7777, () => {
-      console.log("Server is successfully listening on port 7777...");
+    server.listen(process.env.PORT, () => {
+      console.log(
+        "Server is successfully listening on port  ",
+        process.env.PORT
+      );
     });
   })
   .catch((err) => {
