@@ -87,5 +87,6 @@ module.exports.logout = async (req, res) => {
     sameSite: "None",
     secure: true,
   });
+  console.log("Logout Successful!!");
   res.send("Logout Successful!!");
 };

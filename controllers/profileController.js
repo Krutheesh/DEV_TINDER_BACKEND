@@ -1,12 +1,13 @@
 const { validateEditProfileData } = require("../utils/validation");
-
+const User = require("../models/user");
 module.exports.viewProfile = async (req, res) => {
   try {
     const user = req.user;
 
     res.send(user);
   } catch (err) {
-    res.status(400).send("ERROR : " + err.message);
+    console.log(err.status);
+    res.status(401).send("ERROR : " + err.message);
   }
 }
 
@@ -16,17 +17,20 @@ module.exports.editProfile = async (req, res) => {
       throw new Error("Invalid Edit Request");
     }
 
-    const loggedInUser = req.user;
-
-    Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
-
-    await loggedInUser.save();
-
-    res.json({
-      message: `${loggedInUser.firstName}, your profile updated successfuly`,
-      data: loggedInUser,
+    
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    
+    res.status(200).json({
+      message: `${updatedUser.firstName}, your profile updated successfully`,
+      data: updatedUser,
     });
   } catch (err) {
-    res.status(400).send("ERROR : " + err.message);
+    console.log("hello error");
+    console.log(err.message);
+    res.status(400).json("ERROR : " + err.message);
   }
 }

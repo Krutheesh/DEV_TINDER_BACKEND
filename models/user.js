@@ -51,6 +51,13 @@ const userSchema = new mongoose.Schema(
       //   }
       // },
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    membershipType: {
+      type: String,
+    },
     photoUrl: {
       type: String,
       default: "https://geographyandyou.com/images/user-profile.png",
@@ -72,6 +79,13 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", async function (next) {
+  console.log("Before saving user: ", this);
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 userSchema.methods.getJWT = async function () {
   const user = this;
