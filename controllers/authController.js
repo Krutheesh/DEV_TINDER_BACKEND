@@ -32,6 +32,9 @@ module.exports.signUp = async (req, res) => {
     user.password = undefined;
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
+      sameSite: "None",
+      secure: true
+
     });
 
     res.status(200).json({
